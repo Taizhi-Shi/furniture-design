@@ -5,7 +5,8 @@
 家具可持续设计与生命周期评估演示平台
 
 <a href="https://taizhi-shi.github.io/furniture-design/">
-<img width="1101" height="703" alt="Main Content" src="https://github.com/user-attachments/assets/8e54c9cc-922e-45dd-b0d3-ebfce7171497" />
+<img width="1049" height="579" alt="截屏2026-10-27 21 37 01" src="https://github.com/user-attachments/assets/fa9985df-8c1c-4ce5-a550-0a9c089817a0" />
+
 </a>
 
 在线地址：https://taizhi-shi.github.io/furniture-design/
