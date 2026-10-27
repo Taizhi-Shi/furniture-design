@@ -1,11 +1,12 @@
-<div align="center">
+<div align="left">
 
 # EcoDesign · AI-driven Furniture Design Platform
 
 家具可持续设计与生命周期评估演示平台
 
 <a href="https://taizhi-shi.github.io/furniture-design/">
-<img src="docs/preview.png" alt="EcoDesign 网站首页预览，点击打开在线网站" width="800" />
+<img width="1101" height="703" alt="AI-driven Furniture Design Platform" src="https://github.com/user-attachments/assets/882ad3fc-bfa6-46b4-8289-aef4444178ea" />
+ 网站首页预览，点击打开在线网站" width="800" />
 </a>
 
 在线地址：https://taizhi-shi.github.io/furniture-design/
