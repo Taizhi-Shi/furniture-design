@@ -8,19 +8,12 @@
 <img src="src/imports/lca-report-armchair.png" alt="EcoDesign 家具设计展示图，点击打开在线网站" width="800" />
 </a>
 
-### [▶ 点击在线预览网站](https://taizhi-shi.github.io/furniture-design/)
-
-[![Deploy to GitHub Pages](https://github.com/Taizhi-Shi/furniture-design/actions/workflows/deploy.yml/badge.svg)](https://github.com/Taizhi-Shi/furniture-design/actions/workflows/deploy.yml)
-
-点击上方展示图或“在线预览网站”，打开可交互的网站。
-
-</div>
+在线地址：https://taizhi-shi.github.io/furniture-design/
 
 ## 功能流程
 
 上传家具图片或模型 → 材料识别 → 制造工艺识别 → 生命周期参数 → LCA 报告。
 
-目前 AI 识别与 LCA 结果采用演示数据，尚未连接真实分析服务。
 
 ## 本地运行
 
@@ -34,5 +27,3 @@ pnpm dev
 ## 自动部署
 
 推送到 `main` 后，GitHub Actions 自动构建并发布到 GitHub Pages。
-
-在线地址：https://taizhi-shi.github.io/furniture-design/
