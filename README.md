@@ -4,7 +4,6 @@
 
 家具可持续设计与生命周期评估演示平台
 
-<a href="https://taizhi-shi.github.io/furniture-design/">
 <img src="src/imports/lca-report-armchair.png" alt="EcoDesign 家具设计展示图，点击打开在线网站" width="800" />
 </a>
 
