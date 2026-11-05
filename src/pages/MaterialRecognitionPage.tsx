@@ -362,11 +362,13 @@ function DetailPanel({
           </div>
         </div>
 
-        {/* 总碳排放(估算) */}
+        {/* 密度(估算) */}
         <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>总碳排放（估算）</div>
+          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>密度（估算）</div>
           <div style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>
-            {comp.carbonKgCO2e} kg CO₂e
+            {comp.volumeM3 > 0 && Number.isFinite(comp.massKg / comp.volumeM3)
+              ? (comp.massKg / comp.volumeM3).toLocaleString("zh-CN", { maximumFractionDigits: 2 })
+              : "—"} kg/m³
           </div>
         </div>
       </div>
