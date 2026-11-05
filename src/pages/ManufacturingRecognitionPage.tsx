@@ -263,19 +263,18 @@ function ProcessTable({
   const [editDraft, setEditDraft] = useState<Partial<ProcessStep>>({})
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
   const [showAddRow, setShowAddRow] = useState(false)
-  const [newRow, setNewRow] = useState({ name: "", type: "", energyMJ: "", carbonKgCO2e: "" })
+  const [newRow, setNewRow] = useState({ name: "", type: "", energyMJ: "" })
 
   const startEdit = (s: ProcessStep) => {
     setEditingId(s.id)
-    setEditDraft({ name: s.name, type: s.type, energyMJ: s.energyMJ, carbonKgCO2e: s.carbonKgCO2e })
+    setEditDraft({ name: s.name, type: s.type, energyMJ: s.energyMJ })
   }
 
   const saveEdit = (id: number) => {
     onStepsChange(steps.map((s) =>
       s.id === id
         ? { ...s, name: editDraft.name ?? s.name, type: editDraft.type ?? s.type,
-            energyMJ: Number(editDraft.energyMJ) || s.energyMJ,
-            carbonKgCO2e: Number(editDraft.carbonKgCO2e) || s.carbonKgCO2e }
+            energyMJ: Number(editDraft.energyMJ) || s.energyMJ }
         : s
     ))
     setEditingId(null)
@@ -291,9 +290,9 @@ function ProcessTable({
       name: newRow.name,
       type: newRow.type || "加工",
       energyMJ: Number(newRow.energyMJ) || 0,
-      carbonKgCO2e: Number(newRow.carbonKgCO2e) || 0,
+      carbonKgCO2e: 0,
     }])
-    setNewRow({ name: "", type: "", energyMJ: "", carbonKgCO2e: "" })
+    setNewRow({ name: "", type: "", energyMJ: "" })
     setShowAddRow(false)
   }
 
@@ -367,10 +366,6 @@ function ProcessTable({
               <th style={thStyle}>工艺名称</th>
               <th style={thStyle}>工艺类型</th>
               <th style={{ ...thStyle, textAlign: "right" }}>能耗 (MJ)</th>
-              <th style={{ ...thStyle, textAlign: "right" }}>
-                <div>单位碳排放</div>
-                <div style={{ fontWeight: 400, color: "#B0B7C3" }}>(kg CO₂e)</div>
-              </th>
               <th style={{ ...thStyle, width: "60px" }}>操作</th>
             </tr>
           </thead>
@@ -430,20 +425,6 @@ function ProcessTable({
                       />
                     ) : (
                       s.energyMJ.toFixed(2)
-                    )}
-                  </td>
-
-                  {/* 碳排放 */}
-                  <td style={{ ...tdStyle, textAlign: "right", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
-                    {isEditing ? (
-                      <input
-                        type="number"
-                        value={String(editDraft.carbonKgCO2e ?? "")}
-                        onChange={(e) => setEditDraft((d) => ({ ...d, carbonKgCO2e: Number(e.target.value) }))}
-                        style={{ ...inputStyle, textAlign: "right" }}
-                      />
-                    ) : (
-                      s.carbonKgCO2e.toFixed(2)
                     )}
                   </td>
 
@@ -543,15 +524,6 @@ function ProcessTable({
                     style={{ ...inputStyle, textAlign: "right" }}
                   />
                 </td>
-                <td style={tdStyle}>
-                  <input
-                    type="number"
-                    placeholder="0.00"
-                    value={newRow.carbonKgCO2e}
-                    onChange={(e) => setNewRow((r) => ({ ...r, carbonKgCO2e: e.target.value }))}
-                    style={{ ...inputStyle, textAlign: "right" }}
-                  />
-                </td>
                 <td style={{ ...tdStyle, textAlign: "center" }}>
                   <button
                     onClick={addRow}
@@ -640,10 +612,10 @@ function DetailPanel({
         </div>
       </div>
 
-      {/* Info row — 4 items in one row */}
+      {/* Info row — 3 items in one row */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr 1fr",
+        gridTemplateColumns: "1fr 1fr 1fr",
         columnGap: "16px",
         paddingBottom: "18px",
         borderBottom: "1px solid #F3F4F6",
@@ -671,14 +643,6 @@ function DetailPanel({
         <div>
           <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>工艺置信度</div>
           <div style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>{mfg.confidence}%</div>
-        </div>
-
-        {/* 工艺碳排放 */}
-        <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>工艺碳排放（估算）</div>
-          <div style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>
-            {mfg.carbonKgCO2e.toFixed(2)} kg CO₂e
-          </div>
         </div>
       </div>
 
