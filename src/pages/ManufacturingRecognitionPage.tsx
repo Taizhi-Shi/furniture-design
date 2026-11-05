@@ -301,7 +301,7 @@ function ProcessTable({
     color: "#9CA3AF",
     fontWeight: 500,
     fontFamily: "Inter, sans-serif",
-    padding: "0 12px 10px",
+    padding: "0 8px 10px",
     textAlign: "left",
     whiteSpace: "nowrap",
   }
@@ -310,7 +310,7 @@ function ProcessTable({
     fontSize: "13px",
     color: "#111827",
     fontFamily: "Inter, sans-serif",
-    padding: "10px 12px",
+    padding: "10px 8px",
   }
 
   const inputStyle: React.CSSProperties = {
@@ -322,6 +322,8 @@ function ProcessTable({
     padding: "4px 7px",
     outline: "none",
     width: "100%",
+    minWidth: 0,
+    boxSizing: "border-box",
   }
 
   return (
@@ -359,14 +361,21 @@ function ProcessTable({
 
       {/* Table */}
       <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table style={{ width: "100%", minWidth: "400px", tableLayout: "fixed", borderCollapse: "collapse" }}>
+          <colgroup>
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "29%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "19%" }} />
+            <col style={{ width: "20%" }} />
+          </colgroup>
           <thead>
             <tr style={{ borderBottom: "1px solid #F3F4F6" }}>
-              <th style={{ ...thStyle, width: "36px" }}>序号</th>
+              <th style={thStyle}>序号</th>
               <th style={thStyle}>工艺名称</th>
               <th style={thStyle}>工艺类型</th>
               <th style={{ ...thStyle, textAlign: "right" }}>能耗 (MJ)</th>
-              <th style={{ ...thStyle, width: "60px" }}>操作</th>
+              <th style={{ ...thStyle, textAlign: "center" }}>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -415,13 +424,13 @@ function ProcessTable({
                   </td>
 
                   {/* 能耗 */}
-                  <td style={{ ...tdStyle, textAlign: "right", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
+                  <td style={{ ...tdStyle, textAlign: "right", fontVariantNumeric: "tabular-nums", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
                     {isEditing ? (
                       <input
                         type="number"
                         value={String(editDraft.energyMJ ?? "")}
                         onChange={(e) => setEditDraft((d) => ({ ...d, energyMJ: Number(e.target.value) }))}
-                        style={{ ...inputStyle, textAlign: "right" }}
+                        style={{ ...inputStyle, textAlign: "right", fontVariantNumeric: "tabular-nums" }}
                       />
                     ) : (
                       s.energyMJ.toFixed(2)
@@ -446,7 +455,7 @@ function ProcessTable({
                         保存
                       </button>
                     ) : (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
                         <button
                           onClick={() => startEdit(s)}
                           style={{
@@ -456,7 +465,10 @@ function ProcessTable({
                             color: "#9CA3AF",
                             display: "flex",
                             alignItems: "center",
-                            padding: "2px",
+                            padding: "2px 6px",
+                            width: "28px",
+                            justifyContent: "center",
+                            flexShrink: 0,
                             transition: "color 100ms",
                           }}
                           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#4B5563" }}
@@ -478,7 +490,10 @@ function ProcessTable({
                             color: "#9CA3AF",
                             display: "flex",
                             alignItems: "center",
-                            padding: "2px",
+                            padding: "2px 6px",
+                            width: "28px",
+                            justifyContent: "center",
+                            flexShrink: 0,
                             transition: "color 100ms",
                           }}
                           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#EF4444" }}
@@ -521,7 +536,7 @@ function ProcessTable({
                     placeholder="0.00"
                     value={newRow.energyMJ}
                     onChange={(e) => setNewRow((r) => ({ ...r, energyMJ: e.target.value }))}
-                    style={{ ...inputStyle, textAlign: "right" }}
+                    style={{ ...inputStyle, textAlign: "right", fontVariantNumeric: "tabular-nums" }}
                   />
                 </td>
                 <td style={{ ...tdStyle, textAlign: "center" }}>
