@@ -374,7 +374,7 @@ function ProcessTable({
               <th style={thStyle}>序号</th>
               <th style={thStyle}>工艺名称</th>
               <th style={thStyle}>工艺类型</th>
-              <th style={{ ...thStyle, textAlign: "right" }}>能耗 (MJ)</th>
+              <th style={{ ...thStyle, textAlign: "left" }}>能耗 (MJ)</th>
               <th style={{ ...thStyle, textAlign: "center" }}>操作</th>
             </tr>
           </thead>
@@ -424,13 +424,13 @@ function ProcessTable({
                   </td>
 
                   {/* 能耗 */}
-                  <td style={{ ...tdStyle, textAlign: "right", fontVariantNumeric: "tabular-nums", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
+                  <td style={{ ...tdStyle, textAlign: "left", fontVariantNumeric: "tabular-nums", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
                     {isEditing ? (
                       <input
                         type="number"
                         value={String(editDraft.energyMJ ?? "")}
                         onChange={(e) => setEditDraft((d) => ({ ...d, energyMJ: Number(e.target.value) }))}
-                        style={{ ...inputStyle, textAlign: "right", fontVariantNumeric: "tabular-nums" }}
+                        style={{ ...inputStyle, textAlign: "left", fontVariantNumeric: "tabular-nums" }}
                       />
                     ) : (
                       s.energyMJ.toFixed(2)
@@ -536,7 +536,7 @@ function ProcessTable({
                     placeholder="0.00"
                     value={newRow.energyMJ}
                     onChange={(e) => setNewRow((r) => ({ ...r, energyMJ: e.target.value }))}
-                    style={{ ...inputStyle, textAlign: "right", fontVariantNumeric: "tabular-nums" }}
+                    style={{ ...inputStyle, textAlign: "left", fontVariantNumeric: "tabular-nums" }}
                   />
                 </td>
                 <td style={{ ...tdStyle, textAlign: "center" }}>
