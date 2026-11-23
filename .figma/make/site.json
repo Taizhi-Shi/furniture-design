@@ -1,1 +1,10 @@
-{"title":"AI-driven Furniture Design Platform","description":"Furniture sustainable design and lifecycle analysis demo","robots":{"index":false}}
+{
+  "description": "Upload furniture images or 3D files to analyze materials and lifecycle impacts, then receive eco-design and sustainability optimization recommendations.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

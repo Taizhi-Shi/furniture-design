@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import NavBar from "../components/NavBar"
 import heroImage from "../imports/lca-report-armchair.png"
+import { downloadDemoReport } from "../utils/reportExport"
 
 type LcaReportPageProps = {
   onBack: () => void
@@ -9,12 +10,12 @@ type LcaReportPageProps = {
 type IconName = "leaf" | "energy" | "water" | "flask" | "resource" | "factory" | "truck" | "home" | "recycle"
 
 const metrics = [
-  { name: "全球变暖潜势", short: "GWP", value: "48.7", unit: "kg CO₂-eq", tone: "green", width: "88%", icon: "leaf" as IconName, tip: "衡量温室气体在 100 年时间尺度内造成的气候变化影响，以二氧化碳当量表示。" },
-  { name: "能源消耗", short: "CED", value: "326.4", unit: "MJ", tone: "orange", width: "76%", icon: "energy" as IconName, tip: "产品全生命周期内消耗的一次能源总量，包括可再生与不可再生能源。" },
-  { name: "水资源消耗", short: "Water", value: "2.15", unit: "m³", tone: "blue", width: "81%", icon: "water" as IconName, tip: "产品全生命周期直接与间接消耗的淡水资源总量。" },
+  { name: "气候变化", short: "GWP", value: "24.58496", unit: "kg CO₂-eq", tone: "green", width: "88%", icon: "leaf" as IconName, tip: "衡量温室气体在 100 年时间尺度内造成的气候变化影响，以二氧化碳当量表示。" },
+  { name: "化石资源消耗", short: "FDP", value: "336.7", unit: "MJ", tone: "orange", width: "76%", icon: "energy" as IconName, tip: "产品全生命周期内消耗的化石能源资源总量。" },
+  { name: "水资源消耗", short: "WDP", value: "2.15", unit: "m³", tone: "blue", width: "81%", icon: "water" as IconName, tip: "产品全生命周期直接与间接消耗的淡水资源总量。" },
   { name: "酸化潜势", short: "AP", value: "0.27", unit: "kg SO₂-eq", tone: "coral", width: "63%", icon: "flask" as IconName, tip: "衡量排放物造成土壤与水体酸化的潜在影响，以二氧化硫当量表示。" },
   { name: "富营养化潜势", short: "EP", value: "0.18", unit: "kg PO₄³⁻-eq", tone: "yellow", width: "55%", icon: "leaf" as IconName, tip: "衡量营养物质排放导致水体富营养化的潜在影响。" },
-  { name: "资源消耗（矿产）", short: "ADP minerals", value: "1.25E-03", unit: "kg Sb-eq", tone: "brown", width: "46%", icon: "resource" as IconName, tip: "衡量矿产与金属资源稀缺性消耗，以锑当量表示。" },
+  { name: "资源消耗（矿产）", short: "ADP", value: "1.25E-03", unit: "kg Sb-eq", tone: "brown", width: "46%", icon: "resource" as IconName, tip: "衡量矿产与金属资源稀缺性消耗，以锑当量表示。" },
 ]
 
 const lifecycleItems = [
@@ -51,6 +52,10 @@ function DownTrendIcon() {
   return <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path d="M13.8 3.5v9.7m0 0-3-3m3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
 }
 
+function InfoCircleIcon() {
+  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="4.8" stroke="currentColor" strokeWidth="1" /><path d="M6 5.3v3M6 3.5h.01" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" /></svg>
+}
+
 function MetricIcon({ name }: { name: IconName }) {
   if (name === "energy") return <svg viewBox="0 0 20 20"><path d="m11.2 1.8-6 9h4l-.5 7.4 6.1-9.5h-4.1l.5-6.9Z" fill="currentColor" /></svg>
   if (name === "water") return <svg viewBox="0 0 20 20"><path d="M10 2.2S5.2 8 5.2 11.7a4.8 4.8 0 0 0 9.6 0C14.8 8 10 2.2 10 2.2Z" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>
@@ -79,8 +84,6 @@ export default function LcaReportPage({ onBack }: LcaReportPageProps) {
 
   const exportLci = () => downloadDemo("EcoDesign-LCI-demo.csv", "阶段,碳排放 kg CO2-eq\n材料获取,21.92\n生产加工,11.20\n运输,6.33\n使用阶段,5.84\n废弃处理,3.41", "text/csv")
   const exportOpenLca = () => downloadDemo("EcoDesign-openLCA-demo.json", JSON.stringify({ product: "Armchair", gwp: 48.7, unit: "kg CO2-eq", demoData: true }, null, 2), "application/json")
-  const downloadReport = () => downloadDemo("EcoDesign-LCA-Report-demo.pdf", "EcoDesign LCA Analysis Report\nDEMO DATA\nProduct: Armchair\nEnvironmental score: 68/100\nGWP: 48.7 kg CO2-eq", "application/pdf")
-
   return (
     <div className="report-page">
       <NavBar />
@@ -91,7 +94,7 @@ export default function LcaReportPage({ onBack }: LcaReportPageProps) {
             <span className="report-title">分析结果报告</span>
           </div>
           <div className="report-export-actions">
-            <button onClick={downloadReport}><DownloadIcon />下载报告 (PDF)</button>
+            <button onClick={downloadDemoReport}><DownloadIcon />下载报告 (PDF)</button>
             <button onClick={exportOpenLca}><DownloadIcon />导出 openLCA 文件</button>
             <button onClick={exportLci}><DownloadIcon />导出 LCI 数据</button>
           </div>
@@ -102,14 +105,17 @@ export default function LcaReportPage({ onBack }: LcaReportPageProps) {
             <article className="report-hero-card">
               <img src={heroImage} alt="湖泊与山林环境中的现代单人椅" />
               <div className="report-score-card">
-                <span>环境评分</span>
-                <div><strong>68</strong><small>/100</small></div>
-                <b>中等偏低</b>
+                <div className="report-score-heading">
+                  <div><span><MetricIcon name="leaf" /></span><strong>气候变化（GWP）</strong></div>
+                  <b>基于 ReCiPe 2016 (H) <InfoCircleIcon /></b>
+                </div>
+                <div className="report-score-value"><strong>24.58496</strong><span>kg CO₂-eq / 把</span></div>
+                <div className="report-score-comparison"><span>较 V1（23.59058）</span><b>+4.22%</b></div>
               </div>
             </article>
 
             <article className="report-metrics-card">
-              <h2>openLCA 计算结果（LCA 指标）</h2>
+              <h2>环境影响结果（ReCiPe 2016 Midpoint (H)）</h2>
               <div className="report-metrics-grid">
                 {metrics.map((metric) => (
                   <div className="report-metric" key={metric.short} tabIndex={0} data-tooltip={metric.tip}>
@@ -174,6 +180,7 @@ export default function LcaReportPage({ onBack }: LcaReportPageProps) {
               <div className="report-total-saving"><span>全部应用预计可降低</span><strong>13.9 kg CO₂-eq</strong><b>−28.5%</b></div>
             </article>
           </section>
+
         </div>
       </main>
 

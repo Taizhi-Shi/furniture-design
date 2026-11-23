@@ -7,7 +7,6 @@ import {
   DEMO_BASIC_INFO,
   type BasicInfo,
   ITEM_TYPE_OPTIONS,
-  DESIGN_STYLE_OPTIONS,
   USE_SCENE_OPTIONS,
   PRIMARY_USE_OPTIONS,
 } from "../data/demoData"
@@ -239,16 +238,6 @@ function BasicInfoPanel({ modelInfo, onNext }: BasicInfoPanelProps) {
             options={ITEM_TYPE_OPTIONS}
             disabled={false}
             onChange={update("itemType")}
-          />
-        </FormRow>
-
-        {/* 设计风格 */}
-        <FormRow label="设计风格">
-          <StyledSelect
-            value={form.designStyle}
-            options={DESIGN_STYLE_OPTIONS}
-            disabled={false}
-            onChange={update("designStyle")}
           />
         </FormRow>
 

@@ -9,10 +9,10 @@ export interface FurnitureComponent {
   materialEn: string
   materialColor: string       // dot / swatch color
   category: string
-  confidence: number          // 0–100
   massKg: number
   volumeM3: number
-  carbonKgCO2e: number
+  databaseMapping: string
+  matchStatus: "已匹配" | "近似匹配" | "未匹配"
   dotPosition: { x: number; y: number } // % of viewer container
 }
 
@@ -33,10 +33,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "Oak",
     materialColor: "#C4874A",
     category: "天然木材 > 硬木",
-    confidence: 95,
     massKg: 3.2,
     volumeM3: 0.0026,
-    carbonKgCO2e: 1.09,
+    databaseMapping: "sawnwood, hardwood, dried (RER)",
+    matchStatus: "已匹配",
     dotPosition: { x: 62, y: 80 },
   },
   {
@@ -48,10 +48,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "Oak",
     materialColor: "#C4874A",
     category: "天然木材 > 硬木",
-    confidence: 92,
     massKg: 1.8,
     volumeM3: 0.0015,
-    carbonKgCO2e: 0.62,
+    databaseMapping: "sawnwood, hardwood, dried (RER)",
+    matchStatus: "近似匹配",
     dotPosition: { x: 22, y: 52 },
   },
   {
@@ -63,10 +63,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "Oak",
     materialColor: "#C4874A",
     category: "天然木材 > 硬木",
-    confidence: 90,
     massKg: 2.1,
     volumeM3: 0.0018,
-    carbonKgCO2e: 0.72,
+    databaseMapping: "sawnwood, hardwood, dried (RER)",
+    matchStatus: "已匹配",
     dotPosition: { x: 74, y: 62 },
   },
   {
@@ -78,10 +78,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "PU Foam",
     materialColor: "#C8C8C8",
     category: "高分子材料 > 泡沫",
-    confidence: 88,
     massKg: 1.5,
     volumeM3: 0.012,
-    carbonKgCO2e: 3.45,
+    databaseMapping: "polyurethane, flexible foam (RER)",
+    matchStatus: "近似匹配",
     dotPosition: { x: 52, y: 65 },
   },
   {
@@ -93,10 +93,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "PU Foam",
     materialColor: "#C8C8C8",
     category: "高分子材料 > 泡沫",
-    confidence: 87,
     massKg: 1.2,
     volumeM3: 0.0096,
-    carbonKgCO2e: 2.76,
+    databaseMapping: "暂无适用的背景过程",
+    matchStatus: "未匹配",
     dotPosition: { x: 50, y: 28 },
   },
   {
@@ -108,10 +108,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "Polyester Fabric",
     materialColor: "#B0B0B0",
     category: "纺织材料 > 合成纤维",
-    confidence: 86,
     massKg: 0.5,
     volumeM3: 0.0008,
-    carbonKgCO2e: 1.2,
+    databaseMapping: "textile, woven polyester (GLO)",
+    matchStatus: "近似匹配",
     dotPosition: { x: 35, y: 43 },
   },
   {
@@ -123,10 +123,10 @@ export const DEMO_COMPONENTS: FurnitureComponent[] = [
     materialEn: "Steel",
     materialColor: "#8888A0",
     category: "金属材料 > 钢铁",
-    confidence: 96,
     massKg: 0.3,
     volumeM3: 0.000038,
-    carbonKgCO2e: 0.54,
+    databaseMapping: "steel, low-alloyed, at plant (GLO)",
+    matchStatus: "已匹配",
     dotPosition: { x: 50, y: 83 },
   },
 ]

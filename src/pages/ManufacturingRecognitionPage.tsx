@@ -4,55 +4,11 @@ import StepProgressBar from "../components/StepProgressBar"
 
 import { DEMO_COMPONENTS, type FurnitureComponent } from "../data/materialData"
 import {
-  DEMO_MANUFACTURING,
-  type ComponentManufacturing,
+  DEMO_PROCESS_STEPS,
   type ProcessStep,
 } from "../data/manufacturingData"
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
-
-function IconCube() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path d="M9 2L15.5 5.75v7.5L9 17 2.5 13.25V5.75L9 2z" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round" />
-      <path d="M9 2v7.5M2.5 5.75L9 9.5l6.5-3.75" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconOrbit() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path d="M15.5 9A6.5 6.5 0 1 1 9 2.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-      <path d="M9 1v4.5h4.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconFullscreen() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path d="M2 2h4.5M2 2v4.5M16 2h-4.5M16 2v4.5M2 16h4.5M2 16v-4.5M16 16h-4.5M16 16v-4.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconSettings() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.25" />
-      <path d="M9 1.5v2M9 14.5v2M1.5 9h2M14.5 9h2M3.58 3.58l1.42 1.42M12.99 12.99l1.42 1.42M14.42 3.58l-1.42 1.42M5.01 12.99l-1.42 1.42" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function IconLines() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  )
-}
 
 function IconEdit() {
   return (
@@ -94,6 +50,15 @@ function IconPlus() {
   )
 }
 
+function IconInfo() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.1" />
+      <path d="M6.5 5.7v3M6.5 3.8h.01" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 // ─── XYZ Axes ─────────────────────────────────────────────────────────────────
 
 function CoordinateAxes() {
@@ -107,73 +72,6 @@ function CoordinateAxes() {
       <path d="M44 45.5l6 5.5-7 .5" stroke="#EF4444" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       <text x="51" y="47" fill="#EF4444" fontSize="10" fontFamily="Inter,sans-serif" fontWeight="500">X</text>
     </svg>
-  )
-}
-
-// ─── Sidebar Component Item ───────────────────────────────────────────────────
-
-function SidebarItem({
-  comp,
-  isSelected,
-  onClick,
-}: {
-  comp: FurnitureComponent
-  isSelected: boolean
-  onClick: () => void
-}) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "9px",
-        width: "100%",
-        padding: "9px 14px",
-        textAlign: "left",
-        border: "none",
-        borderLeft: isSelected ? "2.5px solid #3B82F6" : "2.5px solid transparent",
-        backgroundColor: isSelected ? "#EFF6FF" : hovered ? "#F9FAFB" : "transparent",
-        cursor: "pointer",
-        transition: "background-color 100ms",
-      }}
-    >
-      <div style={{
-        width: "8px",
-        height: "8px",
-        borderRadius: "50%",
-        backgroundColor: comp.materialColor,
-        flexShrink: 0,
-      }} />
-      <div style={{ minWidth: 0 }}>
-        <div style={{
-          fontSize: "13px",
-          fontWeight: isSelected ? 600 : 400,
-          color: isSelected ? "#2563EB" : "#111827",
-          fontFamily: "Inter, sans-serif",
-          lineHeight: 1.4,
-        }}>
-          <span style={{ color: isSelected ? "#93C5FD" : "#9CA3AF", fontWeight: 500, marginRight: "5px" }}>
-            {comp.numLabel}
-          </span>
-          {comp.name}
-        </div>
-        <div style={{
-          fontSize: "11px",
-          color: "#9CA3AF",
-          fontFamily: "Inter, sans-serif",
-          marginTop: "1px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}>
-          {comp.material}
-        </div>
-      </div>
-    </button>
   )
 }
 
@@ -252,29 +150,104 @@ function ViewerDot({
 
 // ─── Process Steps Table ──────────────────────────────────────────────────────
 
+const PART_OPTIONS = [
+  "木质框架",
+  "框架连接位置",
+  "板材组件",
+  "座垫",
+  "靠背",
+  "扶手",
+  "椅腿",
+  "软包面料",
+  "软包组件",
+  "框架",
+  "连接件",
+  "整椅",
+]
+
+function PartsMultiSelect({
+  value,
+  onChange,
+}: {
+  value: string[]
+  onChange: (value: string[]) => void
+}) {
+  return (
+    <details style={{ position: "relative" }}>
+      <summary style={{
+        minHeight: "28px",
+        display: "flex",
+        alignItems: "center",
+        padding: "4px 7px",
+        border: "1px solid #D1D5DB",
+        borderRadius: "5px",
+        color: value.length ? "#111827" : "#9CA3AF",
+        fontSize: "11px",
+        cursor: "pointer",
+        listStyle: "none",
+      }}>
+        {value.length ? value.join("、") : "选择部件"}
+      </summary>
+      <div style={{
+        position: "absolute",
+        zIndex: 30,
+        top: "calc(100% + 4px)",
+        left: 0,
+        width: "156px",
+        maxHeight: "180px",
+        overflowY: "auto",
+        padding: "6px",
+        border: "1px solid #E5E7EB",
+        borderRadius: "6px",
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0 8px 20px rgba(17,24,39,0.1)",
+      }}>
+        {PART_OPTIONS.map((part) => (
+          <label key={part} style={{ display: "flex", alignItems: "center", gap: "7px", padding: "5px", fontSize: "11px", color: "#374151", cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={value.includes(part)}
+              onChange={() => onChange(value.includes(part) ? value.filter((item) => item !== part) : [...value, part])}
+              style={{ accentColor: "#3B82F6" }}
+            />
+            {part}
+          </label>
+        ))}
+      </div>
+    </details>
+  )
+}
+
 function ProcessTable({
   steps,
   onStepsChange,
+  showAddRow,
+  onShowAddRowChange,
 }: {
   steps: ProcessStep[]
   onStepsChange: (steps: ProcessStep[]) => void
+  showAddRow: boolean
+  onShowAddRowChange: (show: boolean) => void
 }) {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editDraft, setEditDraft] = useState<Partial<ProcessStep>>({})
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
-  const [showAddRow, setShowAddRow] = useState(false)
-  const [newRow, setNewRow] = useState({ name: "", type: "", energyMJ: "" })
+  const [newRow, setNewRow] = useState({ name: "", associatedParts: [] as string[], energyKWh: "" })
 
   const startEdit = (s: ProcessStep) => {
     setEditingId(s.id)
-    setEditDraft({ name: s.name, type: s.type, energyMJ: s.energyMJ })
+    setEditDraft({ name: s.name, associatedParts: [...s.associatedParts], energyKWh: s.energyKWh })
   }
 
   const saveEdit = (id: number) => {
     onStepsChange(steps.map((s) =>
       s.id === id
-        ? { ...s, name: editDraft.name ?? s.name, type: editDraft.type ?? s.type,
-            energyMJ: Number(editDraft.energyMJ) || s.energyMJ }
+        ? {
+            ...s,
+            name: editDraft.name?.trim() || s.name,
+            associatedParts: editDraft.associatedParts?.length ? editDraft.associatedParts : s.associatedParts,
+            energyKWh: Math.max(0, Number(editDraft.energyKWh ?? s.energyKWh)),
+          }
         : s
     ))
     setEditingId(null)
@@ -288,12 +261,12 @@ function ProcessTable({
       id: nextId,
       step: nextStep,
       name: newRow.name,
-      type: newRow.type || "加工",
-      energyMJ: Number(newRow.energyMJ) || 0,
-      carbonKgCO2e: 0,
+      associatedParts: newRow.associatedParts.length ? newRow.associatedParts : ["整椅"],
+      energyKWh: Math.max(0, Number(newRow.energyKWh) || 0),
+      databaseMapping: "待补充",
     }])
-    setNewRow({ name: "", type: "", energyMJ: "" })
-    setShowAddRow(false)
+    setNewRow({ name: "", associatedParts: [], energyKWh: "" })
+    onShowAddRowChange(false)
   }
 
   const thStyle: React.CSSProperties = {
@@ -301,16 +274,16 @@ function ProcessTable({
     color: "#9CA3AF",
     fontWeight: 500,
     fontFamily: "Inter, sans-serif",
-    padding: "0 8px 10px",
+    padding: "0 6px 10px",
     textAlign: "left",
     whiteSpace: "nowrap",
   }
 
   const tdStyle: React.CSSProperties = {
-    fontSize: "13px",
+    fontSize: "12px",
     color: "#111827",
     fontFamily: "Inter, sans-serif",
-    padding: "10px 8px",
+    padding: "8px 6px",
   }
 
   const inputStyle: React.CSSProperties = {
@@ -322,60 +295,21 @@ function ProcessTable({
     padding: "4px 7px",
     outline: "none",
     width: "100%",
-    minWidth: 0,
-    boxSizing: "border-box",
   }
 
   return (
     <div>
-      {/* Section header */}
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: "12px",
-      }}>
-        <span style={{ fontSize: "13px", fontWeight: 600, color: "#111827", fontFamily: "Inter, sans-serif" }}>
-          工艺步骤（可编辑）
-        </span>
-        <button
-          onClick={() => setShowAddRow(true)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-            fontSize: "12px",
-            color: "#3B82F6",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 500,
-            backgroundColor: "transparent",
-            border: "none",
-            cursor: "pointer",
-            padding: "2px 0",
-          }}
-        >
-          <IconPlus />
-          添加工艺步骤
-        </button>
-      </div>
-
       {/* Table */}
       <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", minWidth: "400px", tableLayout: "fixed", borderCollapse: "collapse" }}>
-          <colgroup>
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "29%" }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "19%" }} />
-            <col style={{ width: "20%" }} />
-          </colgroup>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid #F3F4F6" }}>
-              <th style={thStyle}>序号</th>
-              <th style={thStyle}>工艺名称</th>
-              <th style={thStyle}>工艺类型</th>
-              <th style={{ ...thStyle, textAlign: "left" }}>能耗 (MJ)</th>
-              <th style={{ ...thStyle, textAlign: "center" }}>操作</th>
+              <th style={{ ...thStyle, width: "32px" }}>序号</th>
+              <th style={{ ...thStyle, width: "86px" }}>工序名称</th>
+              <th style={{ ...thStyle, width: "112px" }}>关联部件</th>
+              <th style={{ ...thStyle, width: "100px", textAlign: "left" }}>电耗（kWh/把）</th>
+              <th style={{ ...thStyle, width: "112px", paddingLeft: "14px" }}>数据库映射</th>
+              <th style={{ ...thStyle, width: "52px", textAlign: "center" }}>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -410,31 +344,63 @@ function ProcessTable({
                     )}
                   </td>
 
-                  {/* 工艺类型 */}
+                  {/* 关联部件 */}
                   <td style={tdStyle}>
                     {isEditing ? (
-                      <input
-                        value={String(editDraft.type ?? "")}
-                        onChange={(e) => setEditDraft((d) => ({ ...d, type: e.target.value }))}
-                        style={inputStyle}
+                      <PartsMultiSelect
+                        value={editDraft.associatedParts ?? []}
+                        onChange={(associatedParts) => setEditDraft((draft) => ({ ...draft, associatedParts }))}
                       />
                     ) : (
-                      <span style={{ color: "#6B7280" }}>{s.type}</span>
+                      <span style={{ color: "#6B7280", lineHeight: 1.45 }}>{s.associatedParts.join("、")}</span>
                     )}
                   </td>
 
-                  {/* 能耗 */}
-                  <td style={{ ...tdStyle, textAlign: "left", fontVariantNumeric: "tabular-nums", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
+                  {/* 电耗 */}
+                  <td style={{ ...tdStyle, textAlign: "left", color: isHovered && !isEditing ? "#2563EB" : "#111827" }}>
                     {isEditing ? (
                       <input
                         type="number"
-                        value={String(editDraft.energyMJ ?? "")}
-                        onChange={(e) => setEditDraft((d) => ({ ...d, energyMJ: Number(e.target.value) }))}
-                        style={{ ...inputStyle, textAlign: "left", fontVariantNumeric: "tabular-nums" }}
+                        min="0"
+                        step="0.01"
+                        value={String(editDraft.energyKWh ?? "")}
+                        onChange={(e) => setEditDraft((d) => ({ ...d, energyKWh: Math.max(0, Number(e.target.value)) }))}
+                        style={{ ...inputStyle, textAlign: "left" }}
                       />
                     ) : (
-                      s.energyMJ.toFixed(2)
+                      s.energyKWh.toFixed(2)
                     )}
+                  </td>
+
+                  {/* 数据库映射 */}
+                  <td style={{ ...tdStyle, paddingLeft: "14px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                      <span style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "3px 7px",
+                        borderRadius: "999px",
+                        color: s.databaseMapping === "电力供应" ? "#16883B" : s.databaseMapping === "加工服务" ? "#2563EB" : "#6B7280",
+                        backgroundColor: s.databaseMapping === "电力供应" ? "#E9F8ED" : s.databaseMapping === "加工服务" ? "#EFF6FF" : "#F1F3F5",
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        whiteSpace: "nowrap",
+                      }}>
+                        {s.databaseMapping}
+                      </span>
+                      <button
+                        type="button"
+                        title="查看数据库映射说明"
+                        onClick={() => window.alert(
+                          s.databaseMapping === "待补充"
+                            ? "该工序尚未完成生命周期数据库匹配。"
+                            : `${s.databaseMapping}：当前为原型展示映射，需在正式计算前完成数据库过程审核。`
+                        )}
+                        style={{ display: "flex", padding: "2px", border: 0, background: "transparent", color: "#9CA3AF", cursor: "pointer" }}
+                      >
+                        <IconInfo />
+                      </button>
+                    </div>
                   </td>
 
                   {/* 操作 */}
@@ -455,7 +421,7 @@ function ProcessTable({
                         保存
                       </button>
                     ) : (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
                         <button
                           onClick={() => startEdit(s)}
                           style={{
@@ -465,10 +431,7 @@ function ProcessTable({
                             color: "#9CA3AF",
                             display: "flex",
                             alignItems: "center",
-                            padding: "2px 6px",
-                            width: "28px",
-                            justifyContent: "center",
-                            flexShrink: 0,
+                            padding: "2px",
                             transition: "color 100ms",
                           }}
                           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#4B5563" }}
@@ -490,10 +453,7 @@ function ProcessTable({
                             color: "#9CA3AF",
                             display: "flex",
                             alignItems: "center",
-                            padding: "2px 6px",
-                            width: "28px",
-                            justifyContent: "center",
-                            flexShrink: 0,
+                            padding: "2px",
                             transition: "color 100ms",
                           }}
                           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#EF4444" }}
@@ -523,21 +483,24 @@ function ProcessTable({
                   />
                 </td>
                 <td style={tdStyle}>
-                  <input
-                    placeholder="类型"
-                    value={newRow.type}
-                    onChange={(e) => setNewRow((r) => ({ ...r, type: e.target.value }))}
-                    style={inputStyle}
+                  <PartsMultiSelect
+                    value={newRow.associatedParts}
+                    onChange={(associatedParts) => setNewRow((row) => ({ ...row, associatedParts }))}
                   />
                 </td>
-                <td style={tdStyle}>
+                <td style={{ ...tdStyle, textAlign: "left" }}>
                   <input
                     type="number"
+                    min="0"
+                    step="0.01"
                     placeholder="0.00"
-                    value={newRow.energyMJ}
-                    onChange={(e) => setNewRow((r) => ({ ...r, energyMJ: e.target.value }))}
-                    style={{ ...inputStyle, textAlign: "left", fontVariantNumeric: "tabular-nums" }}
+                    value={newRow.energyKWh}
+                    onChange={(e) => setNewRow((r) => ({ ...r, energyKWh: e.target.value.startsWith("-") ? "0" : e.target.value }))}
+                    style={{ ...inputStyle, textAlign: "left" }}
                   />
+                </td>
+                <td style={{ ...tdStyle, paddingLeft: "14px" }}>
+                  <span style={{ display: "inline-flex", padding: "3px 7px", borderRadius: "999px", backgroundColor: "#F1F3F5", color: "#6B7280", fontSize: "10px", fontWeight: 600 }}>待补充</span>
                 </td>
                 <td style={{ ...tdStyle, textAlign: "center" }}>
                   <button
@@ -567,26 +530,20 @@ function ProcessTable({
 // ─── Right Detail Panel ───────────────────────────────────────────────────────
 
 function DetailPanel({
-  comp,
-  mfg,
   steps,
   onStepsChange,
-  onSave,
-  savedFlash,
   onNext,
 }: {
-  comp: FurnitureComponent
-  mfg: ComponentManufacturing
   steps: ProcessStep[]
   onStepsChange: (s: ProcessStep[]) => void
-  onSave: () => void
-  savedFlash: boolean
   onNext?: () => void
 }) {
+  const [showAddRow, setShowAddRow] = useState(false)
+
   return (
     <div style={{
-      width: "520px",
-      flexShrink: 0,
+      flex: "3 1 0",
+      minWidth: 0,
       borderLeft: "1px solid #E5E7EB",
       display: "flex",
       flexDirection: "column",
@@ -596,73 +553,55 @@ function DetailPanel({
     {/* Scrollable content */}
     <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px 0" }}>
 
-      {/* Component info row */}
+      {/* Process table title */}
       <div style={{
         display: "flex",
         alignItems: "center",
-        gap: "10px",
-        marginBottom: "20px",
+        justifyContent: "space-between",
+        marginBottom: "16px",
       }}>
-        {/* Blue circle badge */}
         <div style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "50%",
-          backgroundColor: "#3B82F6",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
+          gap: "10px",
         }}>
-          <span style={{ fontSize: "11px", fontWeight: 700, color: "white" }}>{comp.numLabel}</span>
-        </div>
-        {/* Name + material */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <span style={{ fontSize: "15px", fontWeight: 600, color: "#111827", marginRight: "8px" }}>
-            {comp.name}
-          </span>
-          <span style={{ fontSize: "12px", color: "#6B7280" }}>
-            {comp.material}
-          </span>
-        </div>
-      </div>
-
-      {/* Info row — 3 items in one row */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        columnGap: "16px",
-        paddingBottom: "18px",
-        borderBottom: "1px solid #F3F4F6",
-        marginBottom: "20px",
-      }}>
-        {/* 主要工艺 */}
-        <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>主要工艺</div>
-          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <span style={{ color: "#6B7280" }}><IconWrench /></span>
-            <span style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>{mfg.mainProcess}</span>
+          <div style={{
+            width: "32px",
+            height: "32px",
+            borderRadius: "50%",
+            backgroundColor: "#3B82F6",
+            color: "#FFFFFF",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}>
+            <IconWrench />
           </div>
+          <span style={{ fontSize: "15px", fontWeight: 600, color: "#111827" }}>工艺步骤（可编辑）</span>
         </div>
-
-        {/* 表面处理 */}
-        <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>表面处理</div>
-          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <span style={{ color: "#6B7280" }}><IconWrench /></span>
-            <span style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>{mfg.surfaceTreatment}</span>
-          </div>
-        </div>
-
-        {/* 工艺置信度 */}
-        <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>工艺置信度</div>
-          <div style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>{mfg.confidence}%</div>
-        </div>
+        <button
+          onClick={() => setShowAddRow(true)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+            padding: "2px 0",
+            border: "none",
+            backgroundColor: "transparent",
+            color: "#3B82F6",
+            fontSize: "12px",
+            fontWeight: 500,
+            cursor: "pointer",
+          }}
+        >
+          <IconPlus />
+          添加工艺步骤
+        </button>
       </div>
 
       {/* Process steps table */}
-      <ProcessTable steps={steps} onStepsChange={onStepsChange} />
+      <ProcessTable steps={steps} onStepsChange={onStepsChange} showAddRow={showAddRow} onShowAddRowChange={setShowAddRow} />
     </div>
 
     {/* Fixed button — outside scroll area */}
@@ -710,38 +649,7 @@ interface ManufacturingRecognitionPageProps {
 
 export default function ManufacturingRecognitionPage({ onBack, onNext }: ManufacturingRecognitionPageProps) {
   const [selectedId, setSelectedId] = useState<number>(1)
-  const [showSidebar, setShowSidebar] = useState(true)
-  const [activeToolIcon, setActiveToolIcon] = useState<number | null>(null)
-  const [savedFlash, setSavedFlash] = useState(false)
-
-  // Per-component process steps (editable)
-  const [componentSteps, setComponentSteps] = useState<Record<number, ProcessStep[]>>(() => {
-    const init: Record<number, ProcessStep[]> = {}
-    DEMO_MANUFACTURING.forEach((m) => {
-      init[m.componentId] = [...m.steps]
-    })
-    return init
-  })
-
-  const comp = DEMO_COMPONENTS.find((c) => c.id === selectedId) ?? DEMO_COMPONENTS[0]
-  const mfg = DEMO_MANUFACTURING.find((m) => m.componentId === selectedId) ?? DEMO_MANUFACTURING[0]
-  const steps = componentSteps[selectedId] ?? []
-
-  const handleStepsChange = (newSteps: ProcessStep[]) => {
-    setComponentSteps((prev) => ({ ...prev, [selectedId]: newSteps }))
-  }
-
-  const handleSave = () => {
-    setSavedFlash(true)
-    setTimeout(() => setSavedFlash(false), 2000)
-  }
-
-  const toolIcons = [
-    { Icon: IconCube, title: "3D视图" },
-    { Icon: IconOrbit, title: "旋转视角" },
-    { Icon: IconFullscreen, title: "全屏" },
-    { Icon: IconSettings, title: "设置" },
-  ]
+  const [steps, setSteps] = useState<ProcessStep[]>(() => DEMO_PROCESS_STEPS.map((step) => ({ ...step, associatedParts: [...step.associatedParts] })))
 
   return (
     <div style={{
@@ -805,7 +713,7 @@ export default function ManufacturingRecognitionPage({ onBack, onNext }: Manufac
           minHeight: 0,
         }}>
           {/* ─── Left: 3D Viewer ─────────────────────────────────── */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
+          <div style={{ flex: "2 1 0", display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
             {/* Viewer header */}
             <div style={{
               height: "52px",
@@ -820,92 +728,11 @@ export default function ManufacturingRecognitionPage({ onBack, onNext }: Manufac
                 <span style={{ fontSize: "13px", fontWeight: 600, color: "#111827", marginRight: "10px" }}>
                   3D 模型预览
                 </span>
-                <span style={{ fontSize: "12px", color: "#9CA3AF" }}>
-                  点击模型部件查看材料识别结果
-                </span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                {toolIcons.map(({ Icon, title }, i) => (
-                  <button
-                    key={i}
-                    title={title}
-                    onClick={() => setActiveToolIcon(activeToolIcon === i ? null : i)}
-                    style={{
-                      backgroundColor: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: "4px",
-                      color: activeToolIcon === i ? "#111111" : "#9CA3AF",
-                      transition: "color 150ms",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (activeToolIcon !== i)
-                        (e.currentTarget as HTMLButtonElement).style.color = "#4B5563"
-                    }}
-                    onMouseLeave={(e) => {
-                      if (activeToolIcon !== i)
-                        (e.currentTarget as HTMLButtonElement).style.color = "#9CA3AF"
-                    }}
-                  >
-                    <Icon />
-                  </button>
-                ))}
               </div>
             </div>
 
             {/* Viewer body */}
             <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
-              {/* Sidebar */}
-              {showSidebar && (
-                <div style={{
-                  width: "170px",
-                  flexShrink: 0,
-                  borderRight: "1px solid #F3F4F6",
-                  backgroundColor: "#FAFAFA",
-                  display: "flex",
-                  flexDirection: "column",
-                  overflow: "hidden",
-                }}>
-                  <div style={{ flex: 1, overflowY: "auto" }}>
-                    {DEMO_COMPONENTS.map((c) => (
-                      <SidebarItem
-                        key={c.id}
-                        comp={c}
-                        isSelected={c.id === selectedId}
-                        onClick={() => setSelectedId(c.id)}
-                      />
-                    ))}
-                  </div>
-                  <div style={{ borderTop: "1px solid #F3F4F6", padding: "8px 10px" }}>
-                    <button
-                      onClick={() => setShowSidebar(false)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        width: "100%",
-                        backgroundColor: "transparent",
-                        border: "1px solid #E5E7EB",
-                        borderRadius: "6px",
-                        padding: "5px 10px",
-                        fontSize: "12px",
-                        color: "#374151",
-                        fontFamily: "Inter, sans-serif",
-                        cursor: "pointer",
-                        transition: "border-color 150ms",
-                      }}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#9CA3AF" }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#E5E7EB" }}
-                    >
-                      <IconLines />
-                      隐藏部件列表
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {/* 3D canvas */}
               <div style={{
                 flex: 1,
@@ -942,45 +769,14 @@ export default function ManufacturingRecognitionPage({ onBack, onNext }: Manufac
                   <CoordinateAxes />
                 </div>
 
-                {!showSidebar && (
-                  <button
-                    onClick={() => setShowSidebar(true)}
-                    style={{
-                      position: "absolute",
-                      bottom: "16px",
-                      left: "16px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "6px",
-                      padding: "5px 11px",
-                      fontSize: "12px",
-                      color: "#374151",
-                      fontFamily: "Inter, sans-serif",
-                      cursor: "pointer",
-                      transition: "border-color 150ms",
-                    }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#9CA3AF" }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#E5E7EB" }}
-                  >
-                    <IconLines />
-                    显示部件列表
-                  </button>
-                )}
               </div>
             </div>
           </div>
 
           {/* ─── Right: Detail Panel ─────────────────────────────── */}
           <DetailPanel
-            comp={comp}
-            mfg={mfg}
             steps={steps}
-            onStepsChange={handleStepsChange}
-            onSave={handleSave}
-            savedFlash={savedFlash}
+            onStepsChange={setSteps}
             onNext={onNext}
           />
         </div>

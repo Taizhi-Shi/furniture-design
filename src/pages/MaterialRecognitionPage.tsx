@@ -338,14 +338,6 @@ function DetailPanel({
           </div>
         </div>
 
-        {/* 识别置信度 */}
-        <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>识别置信度</div>
-          <div style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>
-            {comp.confidence}%
-          </div>
-        </div>
-
         {/* 质量(估算) */}
         <div>
           <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>质量（估算）</div>
@@ -362,13 +354,32 @@ function DetailPanel({
           </div>
         </div>
 
-        {/* 密度(估算) */}
-        <div>
-          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>密度（估算）</div>
-          <div style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>
-            {comp.volumeM3 > 0 && Number.isFinite(comp.massKg / comp.volumeM3)
-              ? (comp.massKg / comp.volumeM3).toLocaleString("zh-CN", { maximumFractionDigits: 2 })
-              : "—"} kg/m³
+        {/* 数据库映射 */}
+        <div style={{ gridColumn: "span 2", minWidth: 0 }}>
+          <div style={{ fontSize: "11px", color: "#9CA3AF", marginBottom: "5px" }}>数据库映射</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
+            <span style={{
+              minWidth: 0,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              fontSize: "13px",
+              color: "#111827",
+              fontWeight: 500,
+            }}>
+              {comp.databaseMapping}
+            </span>
+            <span style={{
+              flexShrink: 0,
+              padding: "3px 7px",
+              borderRadius: "999px",
+              fontSize: "10px",
+              fontWeight: 600,
+              color: comp.matchStatus === "已匹配" ? "#16883B" : comp.matchStatus === "近似匹配" ? "#A56B00" : "#6B7280",
+              backgroundColor: comp.matchStatus === "已匹配" ? "#E9F8ED" : comp.matchStatus === "近似匹配" ? "#FFF5D9" : "#F1F3F5",
+            }}>
+              {comp.matchStatus}
+            </span>
           </div>
         </div>
       </div>

@@ -7,10 +7,12 @@ type LifecycleParametersPageProps = {
   onNext?: () => void
 }
 
-type MaintenanceItem = {
+type WasteItem = {
   id: number
-  component: string
-  interval: string
+  material: string
+  massKg: string
+  treatment: string
+  mapped: boolean
 }
 
 function ArrowLeftIcon() {
@@ -146,29 +148,22 @@ function CardHeader({
 }
 
 export default function LifecycleParametersPage({ onBack, onNext }: LifecycleParametersPageProps) {
-  const [advancedOpen, setAdvancedOpen] = useState(false)
-  const [disassemblable, setDisassemblable] = useState(true)
-  const [maintenanceItems, setMaintenanceItems] = useState<MaintenanceItem[]>([])
-  const [transportMode, setTransportMode] = useState("卡车运输（16–32 吨）")
+  const [transportMode, setTransportMode] = useState("公路货运（卡车）")
   const [distance, setDistance] = useState("500")
-  const [loadRate, setLoadRate] = useState("75")
-  const [fuel, setFuel] = useState("柴油")
-  const [returnTrip, setReturnTrip] = useState("是（有回程）")
+  const [transportMass, setTransportMass] = useState("11.02")
   const [life, setLife] = useState("10")
-  const [scene, setScene] = useState("室内（家庭/办公）")
-  const [frequency, setFrequency] = useState("正常使用")
+  const [scene, setScene] = useState("室内（家庭）")
   const [cleaning, setCleaning] = useState("湿布擦拭")
-  const [cleanerAmount, setCleanerAmount] = useState("0.05")
-  const [cleaningFrequency, setCleaningFrequency] = useState("2")
-  const [disposal, setDisposal] = useState("回收利用")
-  const [recycleRate, setRecycleRate] = useState("65")
-  const [landfillRate, setLandfillRate] = useState("10")
-  const [incinerationRate, setIncinerationRate] = useState("25")
-  const [energy, setEnergy] = useState("0.20")
-
-  const addMaintenanceItem = () => {
-    setMaintenanceItems((items) => [...items, { id: Date.now(), component: "", interval: "" }])
-  }
+  const [cleaningWater, setCleaningWater] = useState("0.25")
+  const [cleaningFrequency, setCleaningFrequency] = useState("12")
+  const [wasteItems, setWasteItems] = useState<WasteItem[]>([
+    { id: 1, material: "涂饰橡木", massKg: "6.65", treatment: "待匹配", mapped: false },
+    { id: 2, material: "胶合板组件", massKg: "1.72", treatment: "待匹配", mapped: false },
+    { id: 3, material: "PU 泡沫", massKg: "1.50", treatment: "废物处理（100%）", mapped: true },
+    { id: 4, material: "聚酯织物", massKg: "0.90", treatment: "焚烧处理（100%）", mapped: true },
+    { id: 5, material: "钢连接件", massKg: "0.25", treatment: "填埋处理（100%）", mapped: true },
+  ])
+  const transportDemand = ((Number(transportMass) || 0) * (Number(distance) || 0) / 1000).toFixed(2)
 
   return (
     <div className="lifecycle-page">
@@ -185,101 +180,74 @@ export default function LifecycleParametersPage({ onBack, onNext }: LifecyclePar
 
         <section className="lifecycle-cards" aria-label="生命周期参数">
           <article className="lifecycle-card">
-            <CardHeader type="transport" title="运输过程参数" />
-            <div className="lifecycle-grid lifecycle-grid--three">
-              <SelectField label="运输方式" required value={transportMode} onChange={setTransportMode} options={["卡车运输（16–32 吨）", "铁路运输", "海运", "空运"]} />
+            <CardHeader type="transport" title="运输过程参数">
+              <span className="lifecycle-stage-status lifecycle-stage-status--mapped">✓ 已映射</span>
+            </CardHeader>
+            <div className="lifecycle-grid lifecycle-grid--two-equal">
+              <SelectField label="运输方式" required value={transportMode} onChange={setTransportMode} options={["公路货运（卡车）", "铁路货运", "海运", "空运"]} />
               <NumberField label="运输距离" required value={distance} onChange={setDistance} unit="km" />
-              <NumberField label="载重利用率" required value={loadRate} onChange={setLoadRate} unit="%" />
             </div>
-            <div className="lifecycle-grid lifecycle-grid--two lifecycle-row-gap">
-              <SelectField label="燃料类型" required value={fuel} onChange={setFuel} options={["柴油", "汽油", "生物柴油", "电力"]} />
-              <SelectField label="是否回程" value={returnTrip} onChange={setReturnTrip} options={["是（有回程）", "否（无回程）"]} />
-            </div>
-            <div className="lifecycle-advanced">
-              <button className="lifecycle-expand-button" onClick={() => setAdvancedOpen((open) => !open)} aria-expanded={advancedOpen}>
-                <span>高级参数（可选）</span>
-                <ChevronIcon open={advancedOpen} />
-              </button>
-              {advancedOpen && (
-                <div className="lifecycle-advanced-content">
-                  <NumberField label="空驶距离" value="0" onChange={() => undefined} unit="km" />
-                  <NumberField label="冷链能耗" value="0" onChange={() => undefined} unit="kWh" />
+            <div className="lifecycle-grid lifecycle-grid--two-equal lifecycle-row-gap">
+              <NumberField label="运输质量" required value={transportMass} onChange={setTransportMass} unit="kg" step="0.01" />
+              <div className="lifecycle-field">
+                <span className="lifecycle-label">运输需求（自动计算）</span>
+                <div className="lifecycle-calculated-field">
+                  <strong>{transportDemand} t·km</strong>
+                  <span title="运输需求 = 运输质量 × 运输距离"><InfoIcon /></span>
                 </div>
-              )}
+              </div>
             </div>
           </article>
 
           <article className="lifecycle-card">
-            <CardHeader type="use" title="使用阶段参数" />
-            <div className="lifecycle-grid lifecycle-grid--three">
+            <CardHeader type="use" title="使用阶段参数">
+              <span className="lifecycle-stage-status lifecycle-stage-status--baseline">U0 基准情景</span>
+            </CardHeader>
+            <div className="lifecycle-grid lifecycle-grid--two-equal">
               <NumberField label="产品使用寿命" required value={life} onChange={setLife} unit="年" />
-              <SelectField label="使用场景" required value={scene} onChange={setScene} options={["室内（家庭/办公）", "室内（商业）", "半户外", "户外"]} />
-              <SelectField label="使用频率" value={frequency} onChange={setFrequency} options={["低频使用", "正常使用", "高频使用"]} />
+              <SelectField label="使用场景" required value={scene} onChange={setScene} options={["室内（家庭）", "室内（办公）", "室内（商业）", "半户外", "户外"]} />
             </div>
-
-            <div className="lifecycle-inset lifecycle-inset--cleaning">
+            <div className="lifecycle-row-gap">
               <div className="lifecycle-grid lifecycle-grid--three">
+                <NumberField label="清洁频率" required value={cleaningFrequency} onChange={setCleaningFrequency} unit="次/年" />
+                <NumberField label="单次用水量" required value={cleaningWater} onChange={setCleaningWater} unit="L/次" step="0.01" />
                 <SelectField label="清洁方式" value={cleaning} onChange={setCleaning} options={["湿布擦拭", "干布擦拭", "吸尘", "专业清洗"]} />
-                <NumberField label="清洁剂用量" value={cleanerAmount} onChange={setCleanerAmount} unit="L/次" step="0.01" />
-                <NumberField label="清洁频率" value={cleaningFrequency} onChange={setCleaningFrequency} unit="次/月" />
               </div>
             </div>
-            <div className="lifecycle-inset lifecycle-maintenance">
-              <span className="lifecycle-inset-title">维护更换部件（如有）</span>
-              {maintenanceItems.map((item, index) => (
-                <div className="lifecycle-maintenance-row" key={item.id}>
-                  <input
-                    aria-label={`维护项 ${index + 1} 部件名称`}
-                    placeholder="部件名称"
-                    value={item.component}
-                    onChange={(event) => setMaintenanceItems((items) => items.map((entry) => entry.id === item.id ? { ...entry, component: event.target.value } : entry))}
-                  />
-                  <input
-                    aria-label={`维护项 ${index + 1} 更换周期`}
-                    placeholder="更换周期（年）"
-                    type="number"
-                    min="0"
-                    value={item.interval}
-                    onChange={(event) => setMaintenanceItems((items) => items.map((entry) => entry.id === item.id ? { ...entry, interval: event.target.value } : entry))}
-                  />
-                  <button aria-label="删除维护项" onClick={() => setMaintenanceItems((items) => items.filter((entry) => entry.id !== item.id))}>×</button>
+          </article>
+
+          <article className="lifecycle-card">
+            <CardHeader type="waste" title="废弃阶段参数">
+              <span className="lifecycle-stage-status lifecycle-stage-status--partial">部分映射</span>
+            </CardHeader>
+            <div className="lifecycle-waste-table">
+              <div className="lifecycle-waste-row lifecycle-waste-row--header">
+                <span>材料组件</span><span>质量 (kg)</span><span>处理方式（含比例）</span><span>数据库映射</span>
+              </div>
+              {wasteItems.map((item) => (
+                <div className="lifecycle-waste-row" key={item.id}>
+                  <strong>{item.material}</strong>
+                  <span>{item.massKg}</span>
+                  <span className="lifecycle-waste-select">
+                    <select
+                      value={item.treatment}
+                      onChange={(event) => setWasteItems((items) => items.map((entry) => entry.id === item.id ? { ...entry, treatment: event.target.value, mapped: event.target.value !== "待匹配" } : entry))}
+                    >
+                      <option>待匹配</option>
+                      <option>废物处理（100%）</option>
+                      <option>焚烧处理（100%）</option>
+                      <option>填埋处理（100%）</option>
+                    </select>
+                    <ChevronIcon />
+                  </span>
+                  <span className="lifecycle-mapping-cell">
+                    <span className={item.mapped ? "lifecycle-mapping lifecycle-mapping--done" : "lifecycle-mapping lifecycle-mapping--pending"}>
+                      {item.mapped ? "✓ 已映射" : "待匹配"}
+                    </span>
+                    <button title={item.mapped ? "查看数据库映射说明" : "该材料尚未完成数据库匹配"}><InfoIcon /></button>
+                  </span>
                 </div>
               ))}
-              <button className="lifecycle-add-button" onClick={addMaintenanceItem}>＋ 添加维护项</button>
-            </div>
-          </article>
-
-          <article className="lifecycle-card">
-            <CardHeader type="waste" title="废弃阶段参数" />
-            <div className="lifecycle-grid lifecycle-grid--two-equal">
-              <SelectField label="处置方式" required value={disposal} onChange={setDisposal} options={["回收利用", "综合处置", "焚烧发电", "填埋"]} />
-              <NumberField label="回收率" required value={recycleRate} onChange={setRecycleRate} unit="%" />
-              <div className="lifecycle-row-gap">
-                <NumberField label="填埋率" value={landfillRate} onChange={setLandfillRate} unit="%" />
-              </div>
-              <div className="lifecycle-row-gap">
-              <NumberField label="焚烧率" value={incinerationRate} onChange={setIncinerationRate} unit="%" />
-              </div>
-            </div>
-            <div className="lifecycle-ratio-note">
-              处理比例合计：{Number(recycleRate || 0) + Number(landfillRate || 0) + Number(incinerationRate || 0)}%
-            </div>
-            <div className="lifecycle-inset lifecycle-disassembly">
-              <span className="lifecycle-inset-title">拆解假设</span>
-              <label className="lifecycle-checkbox-row">
-                <input type="checkbox" checked={disassemblable} onChange={(event) => setDisassemblable(event.target.checked)} />
-                <span>可拆解设计</span>
-                <span className="lifecycle-muted-info" title="产品在寿命结束时可由常规工具拆解"><InfoIcon /></span>
-              </label>
-              {disassemblable && (
-                <div className="lifecycle-energy-row">
-                  <span>拆解能耗</span>
-                  <label className="lifecycle-number-wrap">
-                    <input type="number" min="0" step="0.01" value={energy} onChange={(event) => setEnergy(event.target.value)} />
-                    <span>MJ/件</span>
-                  </label>
-                </div>
-              )}
             </div>
           </article>
         </section>

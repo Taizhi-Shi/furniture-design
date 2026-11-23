@@ -16,7 +16,8 @@
 
 
 ## 网站链接
-https://taizhi-shi.github.io/furniture-design/
+
+[打开新版 EcoDesign 网站](https://taizhi-shi.github.io/furniture-design/)
 
 
 ## 本地运行
